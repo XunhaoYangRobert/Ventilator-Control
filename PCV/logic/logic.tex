@@ -1,5 +1,5 @@
 \documentclass{article}
-\usepackage{graphicx}
+\usepackage{graphicx}
 \usepackage{subfigure}
 
 \begin{document}
@@ -52,7 +52,7 @@ $$G(s)=\frac{P(s)}{E(s)}=G_1(s)\cdot G_2(s)=(\frac{K_p}{s}+\frac{K_i}{s^2})(E+Rs
 $$P(s)=G(s)\cdot E(s)=G(s)\cdot (P_0(s)-P(s))$$
 $$\frac{P(s)}{P_0(s)}=\frac{G(s)}{1+G(s)}$$
 Therefore, the transfer function of the system is:
-$$\frac{P(s)}{P_0(s)}=\frac{G(s)}{1+G(s)}=\frac{(sK_p+K_i)(E+Rs)}{s^2+(sK_p+K_i)(E+Rs)}$$
+$$\frac{P(s)}{P_0(s)}=\frac{G(s)}{1+G(s)}=\frac{K_pRs^2+(K_pE+K_iR)s+K_iE}{(K_pR+1)s^2+(K_pE+K_iR)s+K_iE}$$
 
 \section{Exhalation}
 Constructing
