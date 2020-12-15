@@ -1,0 +1,2 @@
+# UCSD KRG Advanced Ventilator Control Project
+This is the control project under the KRG advanced ventilator project at UCSD. The project is at the very start and currently we are trying to build a closed-loop control for the pressure control ventilation (PCV). The related material is in the folder PCV. We aim to complete the matlab/simulink simulation for the control circuit by the start of the 2021 winter quarter.
