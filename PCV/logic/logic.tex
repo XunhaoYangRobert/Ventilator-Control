@@ -4,6 +4,23 @@
 
 \begin{document}
 
+\section{Pneumatic Diagram}
+\subsection{Inner Circuit}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.25]{pneumatic-diagram-inner.png}
+\end{figure}
+
+The two flow control valves will both be one-way. The lower tube is the inhalation tube and the upper tube is the exhalation tube.
+
+\subsection{Outer Circuit}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.25]{pneumatic-diagram-outer.png}
+\end{figure}
+
+\newpage
+
 \section{Inhalation}
 \subsection{Control Circuit}
 \begin{figure}[h]
@@ -55,6 +72,23 @@ Therefore, the transfer function of the system is:
 $$\frac{P(s)}{P_0(s)}=\frac{G(s)}{1+G(s)}=\frac{K_pRs^2+(K_pE+K_iR)s+K_iE}{(K_pR+1)s^2+(K_pE+K_iR)s+K_iE}$$
 
 \section{Exhalation}
-Constructing
+The exhalation process is divided into two parts: 1. Let the gas in the patient's lung goes out naturally 2. Involve a PI control to maintain the pressure on a constant level ($PEEP$). 
+
+For the first part, simply open the exhalation valve. However, instead of completely closing the inhalation valve, a basic flow is delivered by the inhalation tube to help the gas in the lung comes out.
+
+For the second part, when the level of pressure has approached preset level ($PEEP$), a PI control will be involved to maintain it. All of the logic here is the same as in the inhalation process. In this case, the input for the control circuit will be $PEEP$ instead of $PIP$. The flow of the control program is the same, and will also ends when it passes the preset time (determined by $Ti$ and $I:E ratio$). The transfer function is also the same, while the input $P_0(s)$ will be $0$ ($\Delta P=PEEP-PEEP=0$).
+
+\section{Effector}
+From the perspective of hardware, flow is manipulated by controlling the inhalation valve and exhalation valve. To get a positive flow, the inhalation valve will be opened accordingly and the exhalation valve will be closed. To get a negative flow, the exhalation valve will be opened accordingly and the inhalation valve will be closed. In whichever situation, we can choose the pressure sensor in the inhalation tube as the feedback signal. \textbf{(Michael: the pressure sensor in the exhalation tube seems to be redundant?)}
+
+\section{Inhale-exhale Cycle}
+The cycle will be manipulated by the preset time. The logic for patient-triggered breath will be added later but the general idea is: if a negative pressure in the lung is detected after the exhalation (pressure has reached $PEEP$) and before the inhalation, which means the patient want to start a breath spontaneously, the inhalation process will be immediately started and the cycle will be reset.
+
+\section{Weaning Test}
+For now, the idea is present the RSBI, which is an index that helps the doctor to determine when to perform the extubation, to the doctor. More details will be added.
+
+\section{Compliance Tracking}
+More details will be added later. Basic idea:
+$$\frac{1}{C}=\frac{plateau-peep}{V_T}$$. The compliance will be measured every time when the pressure reached plateau pressure.
 
 \end{document}
