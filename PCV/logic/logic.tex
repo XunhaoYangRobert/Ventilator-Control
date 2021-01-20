@@ -85,6 +85,12 @@ From the perspective of hardware, flow is manipulated by controlling the inhalat
 \section{Inhalation-exhalation Cycle}
 The length of the inhalation process and the exhalation process is determined by the preset parameters. The whole control program is conducted as infinitely repeating the inhalation-exhalation cycle. However, during the second half of the exhalation process, when the pressure has reached the $PEEP$ level (which basically means the patient has finished breathing out) and the next inhalation hasn't started, a patient-triggered breath is allowed. The patient will create a negative pressure in the lung when he/she want to start a spontaneous breath, and this can be detected by the pressure sensor. If an unusual large negative value of the difference between $PEEP$ and current pressure level has been detected during the time, the patient is trying to start a spontaneous breath. In this case, we will reset the Inhalation-exhalation cycle and start the inhalation process immediately.
 
+\section{Outer Circuit Control}
+\textbf{Fraction of inspired oxygen (FiO2)} is a measure of the oxygen delivered by the ventilator during inspiration, expressed at a percentage. Room air contains 21\% oxygen. With a given FiO2, the ratio of air flow and O2 flow is determined by:
+$$\frac{0.21\times air~flow+O_2~flow}{air~flow+O_2~flow}=FiO_2$$
+This can be simplified to:
+$$\frac{air~flow}{O_2~flow}=\frac{1-FiO_2}{FiO_2-0.21}$$
+
 \section{Intelligent Weaning Test}
 The \textbf{rapid shallow breathing index} (RSBI) is an index that helps the doctors determine when to extubate the patient. RSBI is calculated by
 $$RSBI=\frac{f}{V_T}$$, where $f$ is the respiratory frequency and $V_T$ is the tidal volume. At the current stage, we plan to add a function that can display RSBI to the doctors. For example, during every inhalation-exhalation cycle we can record the value of tidal volume, and every minute we can refresh the displayed RSBI by dividing total number of breaths in this minute by the average tidal volume.
