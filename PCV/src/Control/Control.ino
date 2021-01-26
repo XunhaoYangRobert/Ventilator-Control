@@ -36,6 +36,20 @@ float kd = 0;
 // Outer circuit values
 float FiO2 = 0.21; // Must be greater than room air oxygen concentration 0.21
 
+// Reference system start time
+unsigned long referenceTime;
+// PEEP value set
+unsigned int PEEP;
+// targetPressure value for PID
+float targetPressure;
+// length of one time of inhalation
+float Tinhale;
+// length of one time of exhalation
+float Texhale;
+// used for call transition function before inhale and exhale
+// 0 stand for inhale 
+boolean mode = EXHALATION;
+
 /*
  * Function to compute PSI for 150PAAB5.
  * @param rawadc raw signal
@@ -89,9 +103,37 @@ void Effector(float targetFlow) {
     
 }
 
-void inhalation(){}
+void inhalation(){
+  // call for transition function every firs time call inhalation in a period
+  if (mode == EXHALATION) {
+    transition();
+    mode = INHALATION;
+  }
+  
+  float targetFlow = PIDController(targetPressure);
+  Effector(targetFlow);
+}
 
-void exhalation(){}
+void exhalation(){
+  // call for transition function every firs time call exhalation in a period
+  if (mode == INHALATION) {
+    transition();
+    mode = EXHALATION;
+  }
+  
+  float trigger; //trigger using pressure difference between current and target to change state for exhale
+  if (pressureSense - PEEP >= trigger) {
+    breathOutEffector();
+  }
+  else {
+    float targetFlow = PIDController(targetPressure);
+    Effector(targetFlow);
+  }
+}
+
+void breathOutEffector() {
+  //TODO: pass PWM signal to exhale valve for completely open it and limit inhale valve to practical minimum
+}
 
 /*
  * This function is called between every inhalation and exhalation. It resets
@@ -101,7 +143,7 @@ void exhalation(){}
 void transition(){
     totalError = 0;
     previousError = 0;
-
+    
     // TODO: Compliance tracking and RSBI
 }
 
@@ -128,6 +170,8 @@ void setup() {
     pinMode(VALVE3, OUTPUT);
     V = 10;
     #endif // VALVES
+    // setting time reference for starting program
+    referenceTime = millis();
 }
 
 /*
@@ -178,7 +222,22 @@ void loop() {
  * Main loop for inner circuit.
  */
 void loop1() {
-    ;
+  // TODO:sensor value sampling
+  unsigned long currentTime = millis();
+  currentTime = currentTime - referenceTime();
+  // cycleTime: use for calculating inhale/exhale 
+  unsigned long cycleTime = currentTime;
+  //TODO: set this shit correct
+  if (cycleTime < Tinhale) {
+    inhalation();
+  }
+  else if (cycleTime < Texhale) {
+    exhalation();
+  }
+  else if (cycleTime > Texhale) {
+    //TODO: cycleTime reset
+  }
+  
 }
 
 /*
