@@ -125,7 +125,7 @@ void exhalation(){
     float trigger; // Determine whether to naturally breath out or to involve PID
     if (pressureSense - PEEP >= trigger) {
         breathOutEffector();
-    } else {
+    } else {//TODO: bug fix this
         float targetFlow = PIDController(targetPressure);
         Effector(targetFlow);
     }
