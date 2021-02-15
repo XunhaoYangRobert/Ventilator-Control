@@ -50,9 +50,8 @@ boolean mode = EXHALATION; // Used to identify which states the ventilator is in
  * @param rawadc raw signal
  * @return corresponding PSI
  */
-float Pressure2PSI150PA(int rawadc) {
-    float PSI = (rawadc-140.0);// 102.4);
-    PSI = PSI*150/819.2;
+float voltage2PSI150PA(int rawadc) {
+    float PSI = (rawadc * 0.0196 - 0.33) * 150 / 0.264;
     return PSI;
 }
 
