@@ -38,6 +38,7 @@ float FiO2 = 0.21; // Must be greater than room air oxygen concentration 0.21
 
 // System values
 unsigned long referenceTime; // Reference system start time
+unsigned long startOfBreath; // Keep track of the start time of the breath
 unsigned int PEEP;
 float targetPressure;
 float Tinhale; // Duration of a single inhalation
@@ -178,6 +179,7 @@ void setup() {
 
     // Set referenceTime as when the program starts
     referenceTime = millis();
+    startOfBreath = 0;
 }
 
 /*
@@ -232,13 +234,13 @@ void loop1() {
 
     // Calculate current time in this cycle
     unsigned long systemTime = millis() - referenceTime();
-    unsigned long cycleTime = 0; // TODO: set this correct; probably needs a global variable
+    unsigned long cycleTime = systemTime - StartOfBreath;
     if (cycleTime < Tinhale) {
         inhalation();
     } else if (cycleTime < Texhale) {
         exhalation();
     } else if (cycleTime > Texhale) {
-        //TODO: cycleTime reset
+        StartOfBreath = systemTime; // Reset StartOfBreath to start next breath
     }
 }
 
