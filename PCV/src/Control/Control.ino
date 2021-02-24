@@ -10,8 +10,6 @@
 #define O2VALVE 7 /* PWM, PIN 7 */
 #define INVALVE2 8 /* PWM, PIN 8 */
 #define OUTVALVE3 9 /* PWM, PIN 9 */
-
-byte V;
 #endif // VALVES
 
 #ifdef MODE
@@ -20,18 +18,18 @@ byte V;
 #endif // MODE
 
 // Sensor values
-float inFlowSense;
-float outFlowSense;
-float inO2Sense;
-float outO2Sense;
-float pressureSense;
+int inFlowSense;
+int outFlowSense;
+int inO2Sense;
+int outO2Sense;
+int pressureSense;
 
 // PID values
-float totalError = 0;
-float previousError = 0;
-float kp = 0;
-float ki = 0;
-float kd = 0;
+int totalError = 0;
+int previousError = 0;
+float kp = 0.0;
+float ki = 0.0;
+float kd = 0.0;
 
 // Outer circuit values
 float FiO2 = 0.21; // Must be greater than room air oxygen concentration 0.21
@@ -39,7 +37,7 @@ float FiO2 = 0.21; // Must be greater than room air oxygen concentration 0.21
 // System values
 unsigned long referenceTime; // Reference system start time
 unsigned long startOfBreath; // Keep track of the start time of the breath
-unsigned int PEEP;
+float PEEP;
 float targetPressure;
 float Tinhale; // Duration of a single inhalation
 float Texhale; // Duration of a single exhalation
@@ -47,31 +45,46 @@ boolean mode = EXHALATION; // Used to identify which states the ventilator is in
 
 /*
  * Function to compute PSI for 150PAAB5.
- * @param rawadc raw signal
+ * @param rawadc raw analog signal
  * @return corresponding PSI
  */
-float voltage2PSI150PA(int rawadc) {
-    float PSI = (rawadc * 3.3 / 1023.0 - 0.33) * 150 / 2.64;
+float adc2PSI150PA(int rawadc) {
+    // // Conversion equation from the data sheet
+    // float PSI = (rawadc * 3.3 / 1023.0 - 0.33) * 150 / 2.64;
+
+    // Result from linear regression
+    float PSI = 0.1737 * rawadc - 32.31021;
     return PSI;
+
+    // TODO: recalibrate pressure sensor after connecting everything
 }
+
+/*
+ * Inversion function of adc2PSI150PA.
+ * @param PSI
+ * @return corresponding adc
+ */
+int PSI2adc150PA(float PSI) {
+    // Result from linear regression
+    int adc = (int)((PSI + 32.31021) / 0.1737);
+    return adc;
+
+    // TODO: recalibrate pressure sensor after connnecting everything
 
 /**
  * Given the target pressure value, this function compute the target flow to
  * to gain, which will be furtherly transformed into PWM signal by the effector.
  *
- * @param targetPressure current targeting pressure
+ * @param targetPressure current targeting pressure (in adc)
  * @return target flow
  */
-float PIDController(float targetPressure) {
-    float targetFlow;
-    float error;
+int PIDController(int targetPressure) {
+    int targetFlow;
+    int error;
 
-    // TODO: link sensor to this variable
-    float detectedPressure = 0;
-
-    error = targetPressure - sensorPressure;
+    error = targetPressure - pressureSense;
     totalError += error;
-    targetFlow = 0 + kp * error + ki * totalError + kd * (error - previousError);
+    targetFlow = (int)(0 + kp * error + ki * totalError + kd * (error - previousError));
     previousError = error;
 
     return targetFlow;
@@ -82,15 +95,15 @@ float PIDController(float targetPressure) {
  * mode.
  * @param targetFlow current targeting flow
  */
-void Effector(float targetFlow) {
+void Effector(int targetFlow) {
     if (targetFlow >= 0) {
         // TODO: change target flow into corresponding PWM signal
-        int PWMSignal = (int)targetFlow;
+        int PWMSignal = targetFlow;
 
         // TODO: Pass PWMSignal to inhale valve and close exhale valve
     } else {
         // TODO: change target flow into corresponding PWM signal
-        int PWMSignal = (int)(-targetFlow);
+        int PWMSignal = (-targetFlow);
 
         // TODO: Pass PWMSignal to exhale valve and close inhale valve
     }
@@ -107,7 +120,7 @@ void inhalation() {
         transition();
     }
 
-    float targetFlow = PIDController(targetPressure);
+    int targetFlow = PIDController(targetPressure);
     Effector(targetFlow);
 }
 
@@ -122,11 +135,11 @@ void exhalation(){
     }
 
     // TODO: set this trigger value
-    float trigger; // Determine whether to naturally breath out or to involve PID
+    int trigger = 1024; // Determine whether to naturally breath out or to involve PID
     if (pressureSense - PEEP >= trigger) {
         breathOutEffector();
-    } else {//TODO: bug fix this
-        float targetFlow = PIDController(targetPressure);
+    } else {
+        int targetFlow = PIDController(targetPressure);
         Effector(targetFlow);
     }
 }
@@ -136,7 +149,8 @@ void exhalation(){
  * minimum to enable a natural breathing out.
  */
 void breathOutEffector() {
-    //TODO: pass PWM signal to exhale valve for completely open it and limit inhale valve to practical minimum
+    // TODO: pass PWM signal to exhale valve for completely open it and limit
+    // inhale valve to practical minimum
 }
 
 /*
@@ -173,57 +187,12 @@ void setup() {
     pinMode(VALVE2, OUTPUT);
     pinMode(VALVE2, OUTPUT);
     pinMode(VALVE3, OUTPUT);
-    V = 10;
     #endif // VALVES
 
     // Set referenceTime as when the program starts
     referenceTime = millis();
     startOfBreath = 0;
 }
-
-/*
-// Test program
-void loop() {
-    //============ READ ONBOARD ANALOGUE PRESSURE SENSOR INPUT ================
-    #ifdef ADCP
-    int pressureV = analogRead(A1);
-    SerialUSB.print("U4 Pressure value: ");
-    SerialUSB.println(pressureV);
-    pressureV = analogRead(A2);
-    SerialUSB.print("U5 Pressure value: ");
-    SerialUSB.println(pressureV);
-    pressureV = analogRead(A3);
-    SerialUSB.print("U6 Pressure value (PSI): ");
-    SerialUSB.println(pressureV);
-    pressureV = analogRead(A4);
-    SerialUSB.print("U7 Pressure value: ");
-    SerialUSB.println(pressureV);
-    pressureV = analogRead(A5);
-    SerialUSB.print("U8 Pressure value: ");
-    SerialUSB.println(pressureV);
-    #endif // ADCP
-
-    //================== TEST VALVE DRIVERS ==============================
-    #ifdef VALVES
-    // Sweep PWM ratios for each valve driver.
-    SerialUSB.println("Solenoid Valve Tests");
-    SerialUSB.print("Valve 0: "); SerialUSB.print(0);SerialUSB.println(" Open");
-    // Test A, 50/50
-    analogWrite(VALVE0,V); // easy to probe with scope.
-    SerialUSB.print("Valve 1: ");SerialUSB.print(V);SerialUSB.println(" Open");
-    analogWrite(VALVE1,V);    // Saftest for driving the system
-    // Test C, 100/0
-    SerialUSB.print("Valve 2: ");SerialUSB.print(V);SerialUSB.println(" Open");
-    analogWrite(VALVE2,V);
-    // Dummy
-    SerialUSB.print("Valve 3: ");SerialUSB.print(V);SerialUSB.println(" Open");
-    analogWrite(VALVE3,V);    // Test last if required
-    V+=50;
-    #endif // VALVES
-
-    delay(500); // every 1/2 second...
-}
-*/
 
 /*
  * Main loop for inner circuit.
@@ -247,10 +216,10 @@ void loop1() {
  * Main loop for outer circuit.
  */
 void loop2() {
-    float oxygenFlow = 0; // TODO: set a standard HIGH ENOUGH value
-    float airFlow;
+    int oxygenFlow = 0; // TODO: set a standard HIGH ENOUGH value in 0-254
+    int airFlow;
 
-    airFlow = (1 - FiO2) / (FiO2 - 0.21) * oxygenFlow;
+    airFlow = (int)((1 - FiO2) / (FiO2 - 0.21) * oxygenFlow);
 
     // TODO: Send corresponding PWM signals to AIRVALVE and O2VALVE
 }
