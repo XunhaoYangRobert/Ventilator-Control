@@ -22,6 +22,7 @@
 #include <Wire.h>
 #include <ADS1115.h>//O2 Sensors: For the ADS1115 you can use the library from i2cdevlib.com. see: https://github.com/jrowberg/i2cdevlib/tree/master/Arduino
 #include <DS3904.h>
+#include <PWM.h>
 #ifdef BUZZER
 #include "NewToneLib.h"
 #endif
@@ -120,6 +121,13 @@ MyTone t(false);
 
 void setup() 
 {
+
+  //setting up pwm function timer
+  InitTimersSafe(); 
+  SetPinFrequencySafe(VALVE0, 1200);
+  SetPinFrequencySafe(VALVE1, 1200);
+  SetPinFrequencySafe(VALVE2, 1200);
+  SetPinFrequencySafe(VALVE3, 1200);
 
   //Setup code
   pinMode(VENTILATORLED,OUTPUT);
@@ -434,15 +442,15 @@ void loop()
   SerialUSB.println("Solenoid Valve Tests");
   SerialUSB.print("Valve 0: "); SerialUSB.print(V);SerialUSB.println(" Open");
   //Test A, 50/50
-  analogWrite(VALVE0,V); //easy to probe with scope.
+  pwmWrite(VALVE0,V); //easy to probe with scope.
   SerialUSB.print("Valve 1: ");SerialUSB.print(V);SerialUSB.println(" Open");
-  analogWrite(VALVE1,V);    //Saftest for driving the system
+  pwmWrite(VALVE1,V);    //Saftest for driving the system
   //Test C, 100/0
   SerialUSB.print("Valve 2: ");SerialUSB.print(V);SerialUSB.println(" Open");
-  analogWrite(VALVE2,V);
+  pwmWrite(VALVE2,V);
   //Dummy
   SerialUSB.print("Valve 3: ");SerialUSB.print(V);SerialUSB.println(" Open");
-  analogWrite(VALVE3,V);    //Test last if required
+  pwmWrite(VALVE3,V);    //Test last if required
   V+=10;
   #endif//VALVES
 
