@@ -20,7 +20,7 @@
 #define VALVES /*OK NOTE: 12Vgnd and 5vgnd must be connected either at PSU or the PCB can be patched. Not sure best way.*/
 
 #include <Wire.h>
-#include <ADS1115.h>//O2 Sensors: For the ADS1115 you can use the library from i2cdevlib.com. see: https://github.com/jrowberg/i2cdevlib/tree/master/Arduino
+/* #include <ADS1115.h>//O2 Sensors: For the ADS1115 you can use the library from i2cdevlib.com. see: https://github.com/jrowberg/i2cdevlib/tree/master/Arduino */
 #include <DS3904.h>
 #include <PWM.h>
 #ifdef BUZZER
@@ -122,13 +122,7 @@ MyTone t(false);
 void setup() 
 {
 
-  //setting up pwm function timer
-  InitTimersSafe(); 
-  SetPinFrequencySafe(VALVE0, 1200);
-  SetPinFrequencySafe(VALVE1, 1200);
-  SetPinFrequencySafe(VALVE2, 1200);
-  SetPinFrequencySafe(VALVE3, 1200);
-
+ 
   //Setup code
   pinMode(VENTILATORLED,OUTPUT);
 
@@ -235,11 +229,17 @@ void setup()
   #endif //PMIC
 
   #ifdef VALVES
+  //setting up pwm function timer
+  InitTimersSafe(); 
+  SetPinFrequencySafe(VALVE0, 1200);
+  SetPinFrequencySafe(VALVE1, 1200);
+  SetPinFrequencySafe(VALVE2, 1200);
+  SetPinFrequencySafe(VALVE3, 1200);
   //Set the valve PWM drivers to output
-  pinMode(VALVE0, OUTPUT);
-  pinMode(VALVE2, OUTPUT);
-  pinMode(VALVE2, OUTPUT);
-  pinMode(VALVE3, OUTPUT);
+  /* pinMode(VALVE0, OUTPUT); */
+  /* pinMode(VALVE2, OUTPUT); */
+  /* pinMode(VALVE2, OUTPUT); */
+  /* pinMode(VALVE3, OUTPUT); */
   V = 10;
   #endif//VALVES
 
