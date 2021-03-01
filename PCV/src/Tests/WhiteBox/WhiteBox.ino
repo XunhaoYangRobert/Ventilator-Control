@@ -231,10 +231,10 @@ void setup()
   #ifdef VALVES
   //setting up pwm function timer
   InitTimersSafe(); 
-  SetPinFrequencySafe(VALVE0, 1200);
-  SetPinFrequencySafe(VALVE1, 1200);
-  SetPinFrequencySafe(VALVE2, 1200);
-  SetPinFrequencySafe(VALVE3, 1200);
+  SetPinFrequencySafe(VALVE0, 1000);
+  SetPinFrequencySafe(VALVE1, 1000);
+  SetPinFrequencySafe(VALVE2, 1000);
+  SetPinFrequencySafe(VALVE3, 1000);
   //Set the valve PWM drivers to output
   /* pinMode(VALVE0, OUTPUT); */
   /* pinMode(VALVE2, OUTPUT); */
