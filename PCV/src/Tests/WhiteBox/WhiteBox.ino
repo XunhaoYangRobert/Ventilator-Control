@@ -120,21 +120,21 @@ float Pressure2PSI150PA(int rawadc)
 MyTone t(false);
 #endif
 
-// Function to custom PWM frequency
-bool ledOn = false;
-void myHandler(){
-  ledOn = !ledOn;
+// // Function to custom PWM frequency
+// bool ledOn = false;
+// void myHandler(){
+//   ledOn = !ledOn;
 
-//if markspace < threshold
-//  ledOn = 0
-//else
-//  ledOn = 1
+// //if markspace < threshold
+// //  ledOn = 0
+// //else
+// //  ledOn = 1
 
-  digitalWrite(6, ledOn); // Led on, off, on, off...
-  digitalWrite(7, ledOn); // Led on, off, on, off...
-  digitalWrite(8, ledOn); // Led on, off, on, off...
-  digitalWrite(9, ledOn); // Led on, off, on, off...
-}
+//   digitalWrite(6, ledOn); // Led on, off, on, off...
+//   digitalWrite(7, ledOn); // Led on, off, on, off...
+//   digitalWrite(8, ledOn); // Led on, off, on, off...
+//   digitalWrite(9, ledOn); // Led on, off, on, off...
+// }
 
 void setup() 
 {
@@ -259,10 +259,10 @@ void setup()
   pinMode(VALVE3, OUTPUT);
   V = 10;
 
-  Timer3.attachInterrupt(myHandler);
+  // Timer3.attachInterrupt(myHandler);
   //Timer3.start(50000); // Calls every 50ms
   //Timer3.start(500); //call every 0.5ms or 1 KHz
-  Timer3.start(416);      //1.2 KHz
+  // Timer3.start(416);      //1.2 KHz
   #endif//VALVES
 
   //Setup the buzzer
