@@ -23,9 +23,9 @@
 // #include <ADS1115.h>//O2 Sensors: For the ADS1115 you can use the library from i2cdevlib.com. see: https://github.com/jrowberg/i2cdevlib/tree/master/Arduino
 #include <DS3904.h>
 #include <PWM.h>
+#include <DueTimer.h> // Change PWM frequency
 #ifdef BUZZER
 #include "NewToneLib.h"
-#include <DueTimer.h>
 #endif
 
 #ifdef PMIC
@@ -112,7 +112,7 @@ byte V;
 float Pressure2PSI150PA(int rawadc)
 {
   float PSI = (rawadc-140.0);//102.4);
-  PSI = fPSI*150/819.2;
+  PSI = PSI*150/819.2;
   return PSI;
 }
 
