@@ -20,11 +20,12 @@
 #define VALVES /*OK NOTE: 12Vgnd and 5vgnd must be connected either at PSU or the PCB can be patched. Not sure best way.*/
 
 #include <Wire.h>
-/* #include <ADS1115.h>//O2 Sensors: For the ADS1115 you can use the library from i2cdevlib.com. see: https://github.com/jrowberg/i2cdevlib/tree/master/Arduino */
+// #include <ADS1115.h>//O2 Sensors: For the ADS1115 you can use the library from i2cdevlib.com. see: https://github.com/jrowberg/i2cdevlib/tree/master/Arduino
 #include <DS3904.h>
 #include <PWM.h>
 #ifdef BUZZER
 #include "NewToneLib.h"
+#include <DueTimer.h>
 #endif
 
 #ifdef PMIC
@@ -111,7 +112,7 @@ byte V;
 float Pressure2PSI150PA(int rawadc)
 {
   float PSI = (rawadc-140.0);//102.4);
-  PSI = PSI*150/819.2;
+  PSI = fPSI*150/819.2;
   return PSI;
 }
 
@@ -119,10 +120,32 @@ float Pressure2PSI150PA(int rawadc)
 MyTone t(false);
 #endif
 
+// Function to custom PWM frequency
+bool ledOn = false;
+void myHandler(){
+  ledOn = !ledOn;
+
+//if markspace < threshold
+//  ledOn = 0
+//else
+//  ledOn = 1
+
+  digitalWrite(6, ledOn); // Led on, off, on, off...
+  digitalWrite(7, ledOn); // Led on, off, on, off...
+  digitalWrite(8, ledOn); // Led on, off, on, off...
+  digitalWrite(9, ledOn); // Led on, off, on, off...
+}
+
 void setup() 
 {
 
- 
+  /* //setting up pwm function timer */
+  /* InitTimersSafe(); */ 
+  /* SetPinFrequencySafe(VALVE0, 1200); */
+  /* SetPinFrequencySafe(VALVE1, 1200); */
+  /* SetPinFrequencySafe(VALVE2, 1200); */
+  /* SetPinFrequencySafe(VALVE3, 1200); */
+
   //Setup code
   pinMode(VENTILATORLED,OUTPUT);
 
@@ -229,18 +252,17 @@ void setup()
   #endif //PMIC
 
   #ifdef VALVES
-  //setting up pwm function timer
-  InitTimersSafe(); 
-  SetPinFrequencySafe(VALVE0, 1000);
-  SetPinFrequencySafe(VALVE1, 1000);
-  SetPinFrequencySafe(VALVE2, 1000);
-  SetPinFrequencySafe(VALVE3, 1000);
   //Set the valve PWM drivers to output
-  /* pinMode(VALVE0, OUTPUT); */
-  /* pinMode(VALVE2, OUTPUT); */
-  /* pinMode(VALVE2, OUTPUT); */
-  /* pinMode(VALVE3, OUTPUT); */
+  pinMode(VALVE0, OUTPUT);
+  pinMode(VALVE2, OUTPUT);
+  pinMode(VALVE2, OUTPUT);
+  pinMode(VALVE3, OUTPUT);
   V = 10;
+
+  Timer3.attachInterrupt(myHandler);
+  //Timer3.start(50000); // Calls every 50ms
+  //Timer3.start(500); //call every 0.5ms or 1 KHz
+  Timer3.start(416);      //1.2 KHz
   #endif//VALVES
 
   //Setup the buzzer
@@ -442,15 +464,15 @@ void loop()
   SerialUSB.println("Solenoid Valve Tests");
   SerialUSB.print("Valve 0: "); SerialUSB.print(V);SerialUSB.println(" Open");
   //Test A, 50/50
-  pwmWrite(VALVE0,V); //easy to probe with scope.
+  analogWrite(VALVE0,V); //easy to probe with scope.
   SerialUSB.print("Valve 1: ");SerialUSB.print(V);SerialUSB.println(" Open");
-  pwmWrite(VALVE1,V);    //Saftest for driving the system
+  analogWrite(VALVE1,V);    //Saftest for driving the system
   //Test C, 100/0
   SerialUSB.print("Valve 2: ");SerialUSB.print(V);SerialUSB.println(" Open");
-  pwmWrite(VALVE2,V);
+  analogWrite(VALVE2,V);
   //Dummy
   SerialUSB.print("Valve 3: ");SerialUSB.print(V);SerialUSB.println(" Open");
-  pwmWrite(VALVE3,V);    //Test last if required
+  analogWrite(VALVE3,V);    //Test last if required
   V+=10;
   #endif//VALVES
 
