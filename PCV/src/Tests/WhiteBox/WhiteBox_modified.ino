@@ -259,10 +259,10 @@ void setup()
   pinMode(VALVE3, OUTPUT);
   V = 10;
 
-  // Timer3.attachInterrupt(myHandler);
+  Timer3.attachInterrupt(myHandler);
   //Timer3.start(50000); // Calls every 50ms
   //Timer3.start(500); //call every 0.5ms or 1 KHz
-  // Timer3.start(416);      //1.2 KHz
+  Timer3.start(416);      //1.2 KHz
   #endif//VALVES
 
   //Setup the buzzer
