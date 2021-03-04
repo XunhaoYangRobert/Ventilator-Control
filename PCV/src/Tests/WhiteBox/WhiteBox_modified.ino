@@ -262,7 +262,8 @@ void setup()
   Timer3.attachInterrupt(myHandler);
   //Timer3.start(50000); // Calls every 50ms
   //Timer3.start(500); //call every 0.5ms or 1 KHz
-  Timer3.start(416);      //1.2 KHz
+  //Timer3.start(416);      //1.2 KHz
+  Time3.start(250); // 2 KHz
   #endif//VALVES
 
   //Setup the buzzer
