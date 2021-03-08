@@ -1,40 +1,32 @@
-#define VALVES
-#define MODE
-#define ADCP
-
 #include <Wire.h>
 
-#ifdef VALVES
 // These value mappings start 3=closest to bottom of PCB 0=closest to top of PCB
 #define AIRVALVE 6 /* PWM, PIN 6 */
 #define O2VALVE 7 /* PWM, PIN 7 */
-#define INVALVE2 8 /* PWM, PIN 8 */
-#define OUTVALVE3 9 /* PWM, PIN 9 */
-#endif // VALVES
+#define INVALVE 8 /* PWM, PIN 8 */
+#define OUTVALVE 9 /* PWM, PIN 9 */
 
-#ifdef MODE
 #define INHALATION 0
 #define EXHALATION 1
-#endif // MODE
 
-// Sensor values
+// Sensor variables
 int inFlowSense;
 int outFlowSense;
 int inO2Sense;
 int outO2Sense;
 int pressureSense;
 
-// PID values
+// PID variables
 int totalError = 0;
 int previousError = 0;
 float kp = 0.0;
 float ki = 0.0;
 float kd = 0.0;
 
-// Outer circuit values
+// Outer circuit variables
 float FiO2 = 0.21; // Must be greater than room air oxygen concentration 0.21
 
-// System values
+// System variables
 unsigned long referenceTime; // Reference system start time
 unsigned long startOfBreath; // Keep track of the start time of the breath
 float PEEP;
@@ -171,23 +163,13 @@ void transition() {
  */
 void setup() {
     SerialUSB.begin(115200);
-
-    #ifndef SERIAL1
-    // Needed for not missing out on messages but hangs code if no serial
-    // monitor is listening.
-    while(!SerialUSB) {
-        ;
-    }
-    #endif // SERIAL1
     SerialUSB.println("BOOT OK\n"); // Work
 
-    #ifdef VALVES
     // Set the valve PWM drivers to output
-    pinMode(VALVE0, OUTPUT);
-    pinMode(VALVE2, OUTPUT);
-    pinMode(VALVE2, OUTPUT);
-    pinMode(VALVE3, OUTPUT);
-    #endif // VALVES
+    pinMode(AIRVALVE, OUTPUT);
+    pinMode(O2VALVE, OUTPUT);
+    pinMode(INVALVE, OUTPUT);
+    pinMode(OUTVALVE, OUTPUT);
 
     // Set referenceTime as when the program starts
     referenceTime = millis();
