@@ -35,6 +35,7 @@ pwm<pwm_pin::PWML7_PC24> pwm_pin6;
 // #include <ADS1115.h>//O2 Sensors: For the ADS1115 you can use the library from i2cdevlib.com. see: https://github.com/jrowberg/i2cdevlib/tree/master/Arduino
 #include <DS3904.h>
 /* #include <PWM.h> */
+#ifdef BUZZER
 #include "NewToneLib.h"
 #endif
 
@@ -151,14 +152,6 @@ MyTone t(false);
 
 void setup() 
 {
-
-  /* //setting up pwm function timer */
-  /* InitTimersSafe(); */ 
-  /* SetPinFrequencySafe(VALVE0, 1200); */
-  /* SetPinFrequencySafe(VALVE1, 1200); */
-  /* SetPinFrequencySafe(VALVE2, 1200); */
-  /* SetPinFrequencySafe(VALVE3, 1200); */
-
   //Setup code
   pinMode(VENTILATORLED,OUTPUT);
 
@@ -245,20 +238,7 @@ void setup()
   //setup the peripheral to be B...
   PIOB->PIO_ABSR |= 1<<25;
   //Setup the timer counter to read 
-  /*************         Capture a PWM frequency and duty cycle          ****************/
-  PMC->PMC_PCER0 |= PMC_PCER0_PID28;                      // Timer Counter 0 channel 1 IS TC1, TC1 power ON
 
-  TC0->TC_CHANNEL[1].TC_CMR = TC_CMR_TCCLKS_TIMER_CLOCK1 // capture mode, MCK/2 = 42 MHz, clk on rising edge
-                              | TC_CMR_ABETRG              // TIOA is used as the external trigger
-                              | TC_CMR_LDRA_RISING         // load RA on rising edge of trigger input
-                              | TC_CMR_LDRB_FALLING;       // load RB on falling edge of trigger input
-                              
-  // If you want to capture PWM data from TC1_Handler()
-  TC0->TC_CHANNEL[1].TC_IER |= TC_IER_LDRAS | TC_IER_LDRBS; // Trigger interruption on Load RA and load RB
-  
-  TC0->TC_CHANNEL[1].TC_CCR = TC_CCR_SWTRG | TC_CCR_CLKEN; // Reset TC counter and enable
-
-  NVIC_EnableIRQ(TC1_IRQn);                                // Enable TC1 interrupts
   #endif //MODEM
 
   #ifdef PMIC
@@ -270,16 +250,12 @@ void setup()
 
   #ifdef VALVES
   //Set the valve PWM drivers to output
-  pinMode(VALVE0, OUTPUT);
+/*  pinMode(VALVE0, OUTPUT);
   pinMode(VALVE2, OUTPUT);
   pinMode(VALVE2, OUTPUT);
-  pinMode(VALVE3, OUTPUT);
+  pinMode(VALVE3, OUTPUT);*/
   V = 10;
 
-  // Timer3.attachInterrupt(myHandler);
-  //Timer3.start(50000); // Calls every 50ms
-  //Timer3.start(500); //call every 0.5ms or 1 KHz
-  // Timer3.start(416);      //1.2 KHz
   #endif//VALVES
 
   //Setup the buzzer
@@ -293,6 +269,7 @@ void setup()
 //main program loop
 void loop()
 {
+  
   //SerialUSB.println("Ventilator white box tests... \n");  //Serial Monitor test.
   // wait for a second
   //
@@ -427,16 +404,7 @@ void loop()
   }
   else
     SerialUSB.println("Pin Low");
-/*  if(CaptureFlag != false)
-  {
-    CaptureFlag = false;
-    SerialUSB.println("Modem Detected something input");
-  }
-  else
-  {
-    SerialUSB.println("Modem Did not detect anything input");
-  }
-  */
+
   #endif //MODEM
 
   //===================== TEST PMIC STATUS SIGNALS (CAN MODIFY BY POP/DEPOP BATTERY ================
@@ -477,20 +445,6 @@ void loop()
   //================== TEST VALVE DRIVERS ==============================
   #ifdef VALVES
 
-  /* //Sweep PWM ratios for each valve driver. */
-  /* SerialUSB.println("Solenoid Valve Tests"); */
-  /* SerialUSB.print("Valve 0: "); SerialUSB.print(V);SerialUSB.println(" Open"); */
-  /* //Test A, 50/50 */
-  /* analogWrite(VALVE0,V); //easy to probe with scope. */
-  /* SerialUSB.print("Valve 1: ");SerialUSB.print(V);SerialUSB.println(" Open"); */
-  /* analogWrite(VALVE1,V);    //Saftest for driving the system */
-  /* //Test C, 100/0 */
-  /* SerialUSB.print("Valve 2: ");SerialUSB.print(V);SerialUSB.println(" Open"); */
-  /* analogWrite(VALVE2,V); */
-  /* //Dummy */
-  /* SerialUSB.print("Valve 3: ");SerialUSB.print(V);SerialUSB.println(" Open"); */
-  /* analogWrite(VALVE3,V);    //Test last if required */
-  /* V+=10; */
 
   /************************MODIFIED****************************/
   if (percent >= 1) {
@@ -506,13 +460,16 @@ void loop()
   percent += 0.05;
 
   /************************MODIFIED****************************/
+ 
   #endif//VALVES
 
   //================ RING THE BUZZER ===================================
   #ifdef BUZZER
   t.tone(BUZZERPIN, 1000, 500);//pin, frequency(Hz), duration(ms)
   #endif
+  
 }
+
 
 #ifdef SPIISR
 //========================== SPI LOOPBACK ISR, PARROT READ IN BYTES ====================
@@ -522,33 +479,3 @@ void SPI0_Handler()
   SPI0->SPI_TDR = SPI0->SPI_RDR;
 }
 #endif //SPIISR
-
-#ifdef MODEM
-//================== MODEM FREQUENCY DETECT (REQUIRES A FUNCTION GENERATOR PLUGED INTO MODEM ========
-//See: https://forum.arduino.cc/index.php?topic=480228.0
-// Note that you could either test status register by polling in loop()
-void TC1_Handler() {
-
-  //Registers A and B (RA and RB) are used as capture registers. They are loaded with
-  //the counter value TC_CV when a programmable event occurs on the signal TIOA1.
-  //TimerCount = TC0->TC_CHANNEL[1].TC_CV;            // save the timer counter register, for testing
-
-  uint32_t status = TC0->TC_CHANNEL[1].TC_SR;       // Read & Save satus register -->Clear status register
-
-  // If TC_SR_LOVRSRA is set, RA or RB have been loaded at least twice without any read
-  // of the corresponding register since the last read of the Status Register,
-  // We are losing some values,trigger of TC_Handler is not fast enough !!
-  //if (status & TC_SR_LOVRS) abort();
-
-  // TODO: calculate frequency and duty cycle from data below *****************
-  if (status & TC_SR_LDRAS) {  // If ISR is fired by LDRAS then ....
-    CaptureCountA = TC0->TC_CHANNEL[1].TC_RA;        // get data from capture register A for TC0 channel 1
-  }
-  else { /* if (status && TC_SR_LDRBS)*/  // If ISR is fired by LDRBS then ....
-    CaptureCountB = TC0->TC_CHANNEL[1].TC_RB;         // get data from capture register B for TC0 channel 1
-
-    CaptureFlag = 1;                      // set flag indicating a new capture value is present
-  }
-
-}
-#endif
