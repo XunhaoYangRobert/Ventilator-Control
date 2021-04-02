@@ -4,8 +4,8 @@
 
 using namespace arduino_due::pwm_lib;
 
-#define PWM_PERIOD_PIN_6 20000
-#define PWM_DUTY_PIN_6 10000
+#define PWM_PERIOD_PIN_6 2500 
+#define PWM_DUTY_PIN_6 0
 
 pwm<pwm_pin::PWML7_PC24> pwm_pin6;
 /************************MODIFIED****************************/
