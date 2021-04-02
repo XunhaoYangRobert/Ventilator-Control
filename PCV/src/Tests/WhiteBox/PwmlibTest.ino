@@ -1,3 +1,15 @@
+/************************MODIFIED****************************/
+#include "pwm_lib.h"
+#include "tc_lib.h"
+
+using namespace arduino_due::pwm_lib;
+
+#define PWM_PERIOD_PIN_6 20000
+#define PWM_DUTY_PIN_6 0
+
+pwm<pwm_pin::PWML7_PC24> pwm_pin6;
+/************************MODIFIED****************************/
+
 #define VENTILATORLED 3
 
 #define VALVEVDDIN 61/*A7 NOT WORKING, NOT SURE...*/
@@ -106,6 +118,9 @@ volatile boolean CaptureFlag;
 #define VALVE3 9/*PWM, PIN 9*/
 
 byte V;
+/************************MODIFIED****************************/
+float percent;
+/************************MODIFIED****************************/
 #endif//VALVES
 
 //function to compute PSI for 150PAAB5
@@ -120,21 +135,21 @@ float Pressure2PSI150PA(int rawadc)
 MyTone t(false);
 #endif
 
-// Function to custom PWM frequency
-bool ledOn = false;
-void myHandler(){
-  ledOn = !ledOn;
+// // Function to custom PWM frequency
+// bool ledOn = false;
+// void myHandler(){
+//   ledOn = !ledOn;
 
-//if markspace < threshold
-//  ledOn = 0
-//else
-//  ledOn = 1
+// //if markspace < threshold
+// //  ledOn = 0
+// //else
+// //  ledOn = 1
 
-  digitalWrite(6, ledOn); // Led on, off, on, off...
-  digitalWrite(7, ledOn); // Led on, off, on, off...
-  digitalWrite(8, ledOn); // Led on, off, on, off...
-  digitalWrite(9, ledOn); // Led on, off, on, off...
-}
+//   digitalWrite(6, ledOn); // Led on, off, on, off...
+//   digitalWrite(7, ledOn); // Led on, off, on, off...
+//   digitalWrite(8, ledOn); // Led on, off, on, off...
+//   digitalWrite(9, ledOn); // Led on, off, on, off...
+// }
 
 void setup() 
 {
@@ -154,6 +169,10 @@ void setup()
   Wire1.begin(); // join i2c bus 1 (as above)
 
   SerialUSB.begin(115200);
+
+  /************************MODIFIED****************************/
+  pwm_pin6.start(PWM_PERIOD_PIN_6, PWM_DUTY_PIN_6);
+  /************************MODIFIED****************************/
 
   #ifndef SERIAL1
   while(!SerialUSB)
@@ -259,11 +278,10 @@ void setup()
   pinMode(VALVE3, OUTPUT);
   V = 10;
 
-  Timer3.attachInterrupt(myHandler);
+  // Timer3.attachInterrupt(myHandler);
   //Timer3.start(50000); // Calls every 50ms
   //Timer3.start(500); //call every 0.5ms or 1 KHz
-  //Timer3.start(416);      //1.2 KHz
-  Timer3.start(250); // 2 KHz
+  // Timer3.start(416);      //1.2 KHz
   #endif//VALVES
 
   //Setup the buzzer
@@ -461,20 +479,35 @@ void loop()
   //================== TEST VALVE DRIVERS ==============================
   #ifdef VALVES
 
-  //Sweep PWM ratios for each valve driver.
-  SerialUSB.println("Solenoid Valve Tests");
-  SerialUSB.print("Valve 0: "); SerialUSB.print(V);SerialUSB.println(" Open");
-  //Test A, 50/50
-  analogWrite(VALVE0,V); //easy to probe with scope.
-  SerialUSB.print("Valve 1: ");SerialUSB.print(V);SerialUSB.println(" Open");
-  analogWrite(VALVE1,V);    //Saftest for driving the system
-  //Test C, 100/0
-  SerialUSB.print("Valve 2: ");SerialUSB.print(V);SerialUSB.println(" Open");
-  analogWrite(VALVE2,V);
-  //Dummy
-  SerialUSB.print("Valve 3: ");SerialUSB.print(V);SerialUSB.println(" Open");
-  analogWrite(VALVE3,V);    //Test last if required
-  V+=10;
+  /* //Sweep PWM ratios for each valve driver. */
+  /* SerialUSB.println("Solenoid Valve Tests"); */
+  /* SerialUSB.print("Valve 0: "); SerialUSB.print(V);SerialUSB.println(" Open"); */
+  /* //Test A, 50/50 */
+  /* analogWrite(VALVE0,V); //easy to probe with scope. */
+  /* SerialUSB.print("Valve 1: ");SerialUSB.print(V);SerialUSB.println(" Open"); */
+  /* analogWrite(VALVE1,V);    //Saftest for driving the system */
+  /* //Test C, 100/0 */
+  /* SerialUSB.print("Valve 2: ");SerialUSB.print(V);SerialUSB.println(" Open"); */
+  /* analogWrite(VALVE2,V); */
+  /* //Dummy */
+  /* SerialUSB.print("Valve 3: ");SerialUSB.print(V);SerialUSB.println(" Open"); */
+  /* analogWrite(VALVE3,V);    //Test last if required */
+  /* V+=10; */
+
+  /************************MODIFIED****************************/
+  if (percent >= 1) {
+      percent = 0;
+  }
+
+  pwm_pin6.set_duty((int)(PWM_PERIOD_PIN_6 * percent);
+
+  SerialUSB.print("pin 6: ");
+  SerialUSB.print(percent);
+  SerialUSB.println(" open");
+
+  percent += 0.05;
+
+  /************************MODIFIED****************************/
   #endif//VALVES
 
   //================ RING THE BUZZER ===================================
