@@ -62,7 +62,7 @@ int PSI2adc150PA(float PSI) {
     return adc;
 
     // TODO: recalibrate pressure sensor after connnecting everything
-
+}
 /**
  * Given the target pressure value, this function compute the target flow to
  * to gain, which will be furtherly transformed into PWM signal by the effector.
@@ -179,7 +179,7 @@ void setup() {
 /*
  * Main loop for inner circuit.
  */
-void loop1() {
+void loop1(1) {// assumeing the frq is 1000 Hz
     // TODO:sensor value sampling
 
     // Calculate current time in this cycle
@@ -197,7 +197,7 @@ void loop1() {
 /*
  * Main loop for outer circuit.
  */
-void loop2() {
+void loop2(1) { // assumeing the frq is 1000 Hz
     int oxygenFlow = 0; // TODO: set a standard HIGH ENOUGH value in 0-254
     int airFlow;
 
