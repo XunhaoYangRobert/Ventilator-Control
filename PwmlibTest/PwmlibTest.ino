@@ -4,7 +4,7 @@
 
 using namespace arduino_due::pwm_lib;
 // 2500 = 40Khz 
-#define PWM_PERIOD_PIN_6 (2500*4)/*500*/ /*(2500 *1) 40KHz */ /*10KHz*/ /* 2500 *//*40KHz*/ 
+#define PWM_PERIOD_PIN_6 100000 // 1 kHz
 #define PWM_DUTY_PIN_6 0
 
 pwm<pwm_pin::PWML7_PC24> pwm_pin6;
@@ -309,9 +309,9 @@ void loop()
   }
   int32_t cal = airFlowFromBytes(&flow);  //convert to a normalized scale of airflow units
 
-  SerialUSB.print("JP1 Calibrated Airflow read: ");
-  SerialUSB.print(cal);
-  SerialUSB.print('\n');
+  /* SerialUSB.print("JP1 Calibrated Airflow read: "); */
+  /* SerialUSB.print(cal); */
+  /* SerialUSB.print('\n'); */
 
   //Test Flow sensor attached to JP2 on I2C bus 1
   flowbytes flow1;
@@ -458,7 +458,7 @@ void loop()
   SerialUSB.print(percent);
   SerialUSB.println(" open");
 
-  percent += 0.05;
+  percent += 0.005;
 
   /************************MODIFIED****************************/
  
