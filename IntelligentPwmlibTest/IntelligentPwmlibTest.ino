@@ -4,8 +4,8 @@
 
 using namespace arduino_due::pwm_lib;
 
-unsigned int pwmPeriodPin6 = 100000; // Starting from 1 kHz
-unsigned int currentFrequency = 1;
+unsigned int pwmPeriodPin6 = (100000 /16); // Starting from 1 kHz
+unsigned int currentFrequency = 16;
 
 pwm<pwm_pin::PWML7_PC24> pwm_pin6;
 /************************MODIFIED****************************/
@@ -265,6 +265,15 @@ void setup()
   #endif
 
   digitalWrite(VENTILATORLED, LOW);    // turn the LED off by making the voltage LOW
+
+  flowbytes poo;
+  airFlowFromBytes(&poo);
+  airFlowFromBytes(&poo);
+  airFlowFromBytes(&poo);
+  airFlowFromBytes(&poo);
+  airFlowFromBytes(&poo);
+  airFlowFromBytes(&poo);
+  percent = 0.5;
 }
 
 //main program loop
@@ -277,9 +286,9 @@ void loop()
   // put your main code here, to run repeatedly:
   //Peripheral Test, LED. Very useful to know that the code is actually running without JTAG capability
   digitalWrite(VENTILATORLED, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(500);//500);                       // wait for a second
+  delay(250);//500);                       // wait for a second
   digitalWrite(VENTILATORLED, LOW);    // turn the LED off by making the voltage LOW
-  delay(500);//500); 
+  delay(250);//500); 
 
   //=========================== READ O2 SENSOR ========================
   #ifdef ADCO2
@@ -450,12 +459,14 @@ void loop()
   /************************MODIFIED****************************/
   if (currentFrequency > 128) {
       currentFrequency = 1;
-      percent = 0;
+      percent = 0.5;
       pwmPeriodPin6 = 100000;
   }
 
-  if (percent >= 1) {
-      percent = 0;
+//  if (percent >= 0.65) {//1) {
+//      percent = 0;
+  if (percent >= 1) {//1) {
+      percent = 0.5;
       pwmPeriodPin6 /= 2;
       currentFrequency *= 2;
 

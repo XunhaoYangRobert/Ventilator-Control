@@ -3,8 +3,8 @@
 #include "tc_lib.h"
 
 using namespace arduino_due::pwm_lib;
-
-#define PWM_PERIOD_PIN_6 2500 
+// 2500 = 40Khz 
+#define PWM_PERIOD_PIN_6 (2500*4)/*500*/ /*(2500 *1) 40KHz */ /*10KHz*/ /* 2500 *//*40KHz*/ 
 #define PWM_DUTY_PIN_6 0
 
 pwm<pwm_pin::PWML7_PC24> pwm_pin6;
@@ -156,7 +156,7 @@ void setup()
   pinMode(VENTILATORLED,OUTPUT);
 
   //Setup I2C
-  Wire.begin();  // join i2c bus 0 (address optional for master)
+  Wire.begin(PWM_PERIOD_PIN_6);  // join i2c bus 0 (address optional for master)
   Wire1.begin(); // join i2c bus 1 (as above)
 
   SerialUSB.begin(115200);
@@ -171,8 +171,9 @@ void setup()
     ;//Needed for not missing out on messages but hangs code if no serial monitor is listenting.
   }
   #endif //SERIAL1
-  SerialUSB.println("BOOT OK\n"); //Work
-  
+  SerialUSB.print(PWM_PERIOD_PIN_6); //PERIOD
+  SerialUSB.println(" BOOT OK\n"); //Work
+    
 
   #ifdef ADCO2
   bool adc0con;
