@@ -118,7 +118,7 @@ volatile boolean CaptureFlag;
 
 byte V;
 /************************MODIFIED****************************/
-float percent;
+float percent =0.5;
 /************************MODIFIED****************************/
 #endif//VALVES
 
@@ -277,9 +277,9 @@ void loop()
   // put your main code here, to run repeatedly:
   //Peripheral Test, LED. Very useful to know that the code is actually running without JTAG capability
   digitalWrite(VENTILATORLED, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(1000);//500);                       // wait for a second
+  delay(200);//500);                       // wait for a second
   digitalWrite(VENTILATORLED, LOW);    // turn the LED off by making the voltage LOW
-  delay(1000);//500); 
+  delay(200);//500); 
 
   //=========================== READ O2 SENSOR ========================
   #ifdef ADCO2
@@ -449,7 +449,7 @@ void loop()
 
   /************************MODIFIED****************************/
   if (percent >= 1) {
-      percent = 0;
+      percent = 0.5;
   }
 
   pwm_pin6.set_duty((int)(PWM_PERIOD_PIN_6 * percent));
