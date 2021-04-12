@@ -309,9 +309,9 @@ void loop()
   }
   int32_t cal = airFlowFromBytes(&flow);  //convert to a normalized scale of airflow units
 
-  /* SerialUSB.print("JP1 Calibrated Airflow read: "); */
-  /* SerialUSB.print(cal); */
-  /* SerialUSB.print('\n'); */
+  SerialUSB.print("Airflow read: ");
+  SerialUSB.print(cal);
+  SerialUSB.print('\n');
 
   //Test Flow sensor attached to JP2 on I2C bus 1
   flowbytes flow1;
@@ -330,9 +330,9 @@ void loop()
   }
   cal = airFlowFromBytes(&flow1);
 
-  SerialUSB.print("JP2 Calibrated Airflow read: ");
-  SerialUSB.print(cal);
-  SerialUSB.print('\n');
+  /* SerialUSB.print("JP2 Calibrated Airflow read: "); */
+  /* SerialUSB.print(cal); */
+  /* SerialUSB.print('\n'); */
 
   #endif //AIRFLOW
 
@@ -454,9 +454,8 @@ void loop()
 
   pwm_pin6.set_duty((int)(PWM_PERIOD_PIN_6 * percent));
 
-  SerialUSB.print("pin 6: ");
   SerialUSB.print(percent);
-  SerialUSB.println(" open");
+  SerialUSB.print(" open; ");
 
   percent += 0.005;
 
