@@ -1,0 +1,235 @@
+BOOT OK
+
+Very suspicious data! Oh no!
+JP1 Calibrated Airflow read: 5354
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 10 Open
+Valve 1: 10 Open
+Valve 2: 10 Open
+Valve 3: 10 Open
+Very suspicious data! Oh no!
+JP1 Calibrated Airflow read: 5227
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 20 Open
+Valve 1: 20 Open
+Valve 2: 20 Open
+Valve 3: 20 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 30 Open
+Valve 1: 30 Open
+Valve 2: 30 Open
+Valve 3: 30 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 40 Open
+Valve 1: 40 Open
+Valve 2: 40 Open
+Valve 3: 40 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 50 Open
+Valve 1: 50 Open
+Valve 2: 50 Open
+Valve 3: 50 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 60 Open
+Valve 1: 60 Open
+Valve 2: 60 Open
+Valve 3: 60 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 70 Open
+Valve 1: 70 Open
+Valve 2: 70 Open
+Valve 3: 70 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 80 Open
+Valve 1: 80 Open
+Valve 2: 80 Open
+Valve 3: 80 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 90 Open
+Valve 1: 90 Open
+Valve 2: 90 Open
+Valve 3: 90 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 100 Open
+Valve 1: 100 Open
+Valve 2: 100 Open
+Valve 3: 100 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 110 Open
+Valve 1: 110 Open
+Valve 2: 110 Open
+Valve 3: 110 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 120 Open
+Valve 1: 120 Open
+Valve 2: 120 Open
+Valve 3: 120 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 130 Open
+Valve 1: 130 Open
+Valve 2: 130 Open
+Valve 3: 130 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 140 Open
+Valve 1: 140 Open
+Valve 2: 140 Open
+Valve 3: 140 Open
+JP1 Calibrated Airflow read: 1
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 150 Open
+Valve 1: 150 Open
+Valve 2: 150 Open
+Valve 3: 150 Open
+JP1 Calibrated Airflow read: 11
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 160 Open
+Valve 1: 160 Open
+Valve 2: 160 Open
+Valve 3: 160 Open
+JP1 Calibrated Airflow read: 51
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 170 Open
+Valve 1: 170 Open
+Valve 2: 170 Open
+Valve 3: 170 Open
+JP1 Calibrated Airflow read: 107
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 180 Open
+Valve 1: 180 Open
+Valve 2: 180 Open
+Valve 3: 180 Open
+JP1 Calibrated Airflow read: 199
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 190 Open
+Valve 1: 190 Open
+Valve 2: 190 Open
+Valve 3: 190 Open
+JP1 Calibrated Airflow read: 340
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 200 Open
+Valve 1: 200 Open
+Valve 2: 200 Open
+Valve 3: 200 Open
+JP1 Calibrated Airflow read: 553
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 210 Open
+Valve 1: 210 Open
+Valve 2: 210 Open
+Valve 3: 210 Open
+JP1 Calibrated Airflow read: 829
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 220 Open
+Valve 1: 220 Open
+Valve 2: 220 Open
+Valve 3: 220 Open
+JP1 Calibrated Airflow read: 1033
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 230 Open
+Valve 1: 230 Open
+Valve 2: 230 Open
+Valve 3: 230 Open
+JP1 Calibrated Airflow read: 1287
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 240 Open
+Valve 1: 240 Open
+Valve 2: 240 Open
+Valve 3: 240 Open
+JP1 Calibrated Airflow read: 1402
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 250 Open
+Valve 1: 250 Open
+Valve 2: 250 Open
+Valve 3: 250 Open
+JP1 Calibrated Airflow read: 1482
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 4 Open
+Valve 1: 4 Open
+Valve 2: 4 Open
+Valve 3: 4 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 14 Open
+Valve 1: 14 Open
+Valve 2: 14 Open
+Valve 3: 14 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 24 Open
+Valve 1: 24 Open
+Valve 2: 24 Open
+Valve 3: 24 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 34 Open
+Valve 1: 34 Open
+Valve 2: 34 Open
+Valve 3: 34 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 44 Open
+Valve 1: 44 Open
+Valve 2: 44 Open
+Valve 3: 44 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 54 Open
+Valve 1: 54 Open
+Valve 2: 54 Open
+Valve 3: 54 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 64 Open
+Valve 1: 64 Open
+Valve 2: 64 Open
+Valve 3: 64 Open
+JP1 Calibrated Airflow read: 0
+JP2 Calibrated Airflow read: 65327
+Solenoid Valve Tests
+Valve 0: 74 Open
+Valve 1: 74 Open
+Valve 2: 74 Open
+Valve 3: 74 Open
