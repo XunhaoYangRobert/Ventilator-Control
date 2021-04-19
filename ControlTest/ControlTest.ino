@@ -214,7 +214,7 @@ void loop() {// 50 Hz
 //  } else if (cycleTime > Texhale) {
 //    startOfBreath = systemTime; // Reset startOfBreath to start next breath
 //  }
-  inhalation(); //DEBUG: testing PID during inhalation
+//  inhalation(); //DEBUG: testing PID during inhalation
 
   pwmInValve.set_duty(PWM_PERIOD);
   pwmOutValve.set_duty(PWM_PERIOD);
