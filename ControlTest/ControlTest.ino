@@ -89,6 +89,12 @@ int PIDController(int targetPressure) {
   targetFlow = (int)(0 + kp * error + ki * totalError + kd * (error - previousError));
   previousError = error;
 
+  /*******DEBUG******/
+  SerialUSB.print("current error: ");
+  SerialUSB.println(error);
+  SerialUSB.print("current target flow: ");
+  SerialUSB.println(targetFlow);
+
   return targetFlow;
 }
 
@@ -214,7 +220,10 @@ void loop() {// 50 Hz
 //  } else if (cycleTime > Texhale) {
 //    startOfBreath = systemTime; // Reset startOfBreath to start next breath
 //  }
-  inhalation(); //DEBUG: testing PID during inhalation
+//  inhalation(); //DEBUG: testing PID during inhalation
+
+  pwmInValve.set_duty((int)(PWM_PERIOD * 0.9));
+  pwmOutValve.set_duty((int)(PWM_PERIOD * 0.9));
 
   delay(1000);
 }
