@@ -20,7 +20,7 @@ unsigned long startOfBreath; // Keep track of the start time of each breath
 
 // Inner circuit variables
 float PEEP;
-float targetPressure = 256; // In rawadc
+float targetPressure = 512; // In rawadc
 float Tinhale; // Duration of a single inhalation
 float Texhale; // Duration of a single exhalation
 boolean mode; // Used to identify which states the ventilator is in
@@ -37,8 +37,8 @@ int outerPressure; // Pressure sensor in outer circuit
 // PID variables
 int totalError;
 int previousError;
-float kp = 1;
-float ki = 1;
+float kp = 10;
+float ki = 10;
 float kd;
 
 // PWM variables
@@ -103,21 +103,21 @@ void Effector(int targetFlow) {
     pwmOutValve.set_duty(0);
   } else if (targetFlow > 0) {
     int PWMSignal = targetFlow;
-    if (PWMSignal > 1023) {
-      PWMSignal = 1023;
+    if (PWMSignal > 10230) {
+      PWMSignal = 10230;
     }
 
-    float percentOpen = PWMSignal * 1.0 / 1023;
+    float percentOpen = PWMSignal * 1.0 / 10230;
     pwmInValve.set_duty((int)(PWM_PERIOD * (0.6 + 0.3 * percentOpen)));
     pwmOutValve.set_duty(0);
   } else {
     int PWMSignal = -targetFlow;
 
-    if (PWMSignal > 1023) {
-      PWMSignal = 1023;
+    if (PWMSignal > 10230) {
+      PWMSignal = 10230;
     }
 
-    float percentOpen = PWMSignal * 1.0 / 1023;
+    float percentOpen = PWMSignal * 1.0 / 10230;
     pwmInValve.set_duty((int)(PWM_PERIOD * (0.6 + 0.3 * percentOpen)));
     pwmOutValve.set_duty(0);
   }
@@ -214,10 +214,7 @@ void loop() {// 50 Hz
 //  } else if (cycleTime > Texhale) {
 //    startOfBreath = systemTime; // Reset startOfBreath to start next breath
 //  }
-//  inhalation(); //DEBUG: testing PID during inhalation
-
-  pwmInValve.set_duty(PWM_PERIOD);
-  pwmOutValve.set_duty(PWM_PERIOD);
+  inhalation(); //DEBUG: testing PID during inhalation
 
   delay(1000);
 }
