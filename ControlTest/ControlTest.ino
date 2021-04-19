@@ -20,7 +20,7 @@ unsigned long startOfBreath; // Keep track of the start time of each breath
 
 // Inner circuit variables
 float PEEP;
-float targetPressure; // In rawadc
+float targetPressure = 256; // In rawadc
 float Tinhale; // Duration of a single inhalation
 float Texhale; // Duration of a single exhalation
 boolean mode; // Used to identify which states the ventilator is in
@@ -197,17 +197,12 @@ void setup() {
 }
 
 /**
- * Background loop.
- */
-void loop() {
-  ;
-}
-
-/**
  * Main loop for inner circuit.
  */
-void loop1(20) {// 50 Hz
+void loop() {// 50 Hz
   // TODO:sensor value sampling
+  pressure = analogRead(A1);
+  SerialUSB.println(pressure);
 
   // Calculate current time in this cycle
   unsigned long systemTime = millis() - referenceTime;
@@ -220,6 +215,8 @@ void loop1(20) {// 50 Hz
 //    startOfBreath = systemTime; // Reset startOfBreath to start next breath
 //  }
   inhalation(); //DEBUG: testing PID during inhalation
+
+  delay(20);
 }
 
 ///**
