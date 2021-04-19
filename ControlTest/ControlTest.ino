@@ -4,10 +4,10 @@
 using namespace arduino_due::pwm_lib;
 
 // IMPORTANT: must connect each pin with corresponding valve!!!
-#define AIRVALVE 6 // PWM, PIN 6
-#define O2VALVE 7 // PWM, PIN 7
-#define INVALVE 8 // PWM, PIN 8
-#define OUTVALVE 9 // PWM, PIN 9
+#define INVALVE 6 // PWM, PIN 6
+#define OUTVALVE 7 // PWM, PIN 7
+#define AIRVALVE 8 // PWM, PIN 8
+#define O2VALVE 9 // PWM, PIN 9
 
 #define INHALATION 0
 #define EXHALATION 1
@@ -42,8 +42,8 @@ float ki;
 float kd;
 
 // PWM variables
-pwm<pwm_pin::PWML5_PC22> pwmInValve; // PIN 8
-pwm<pwm_pin::PWML4_PC21> pwmOutValve; // PIN 9
+pwm<pwm_pin::PWML7_PC24> pwmInValve; // PIN 6
+pwm<pwm_pin::PWML6_PC23> pwmOutValve; // PIN 7
 
 /**
  * Function to compute PSI for 150PAAB5.
