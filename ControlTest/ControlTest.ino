@@ -38,7 +38,7 @@ int outerPressure; // Pressure sensor in outer circuit
 int totalError;
 int previousError;
 float kp = 10;
-float ki = 10;
+float ki = 1;
 float kd;
 
 // PWM variables
