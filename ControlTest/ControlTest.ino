@@ -109,21 +109,21 @@ void Effector(int targetFlow) {
     pwmOutValve.set_duty(0);
   } else if (targetFlow > 0) {
     int PWMSignal = targetFlow;
-    if (PWMSignal > 10230) {
-      PWMSignal = 10230;
+    if (PWMSignal > 256) {
+      PWMSignal = 256;
     }
 
-    float percentOpen = PWMSignal * 1.0 / 10230;
+    float percentOpen = PWMSignal * 1.0 / 256;
     pwmInValve.set_duty((int)(PWM_PERIOD * (0.6 + 0.3 * percentOpen)));
     pwmOutValve.set_duty(0);
   } else {
     int PWMSignal = -targetFlow;
 
-    if (PWMSignal > 10230) {
-      PWMSignal = 10230;
+    if (PWMSignal > 256) {
+      PWMSignal = 256;
     }
 
-    float percentOpen = PWMSignal * 1.0 / 10230;
+    float percentOpen = PWMSignal * 1.0 / 256;
     pwmInValve.set_duty((int)(PWM_PERIOD * (0.6 + 0.3 * percentOpen)));
     pwmOutValve.set_duty(0);
   }
@@ -208,6 +208,8 @@ void setup() {
 void loop() {// 50 Hz
   // TODO:sensor value sampling
   pressure = analogRead(A1);
+  SerialUSB.println("------------------------------");
+  SerialUSB.print("current pressure: ");
   SerialUSB.println(pressure);
 
   // Calculate current time in this cycle
@@ -220,10 +222,7 @@ void loop() {// 50 Hz
 //  } else if (cycleTime > Texhale) {
 //    startOfBreath = systemTime; // Reset startOfBreath to start next breath
 //  }
-//  inhalation(); //DEBUG: testing PID during inhalation
-
-  pwmInValve.set_duty((int)(PWM_PERIOD * 0.9));
-  pwmOutValve.set_duty((int)(PWM_PERIOD * 0.8));
+  inhalation(); //DEBUG: testing PID during inhalation
 
   delay(1000);
 }
