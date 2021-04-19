@@ -216,9 +216,6 @@ void loop() {// 50 Hz
 //  }
   inhalation(); //DEBUG: testing PID during inhalation
 
-  pwmInValve.set_duty(PWM_PERIOD);
-  pwmOutValve.set_duty(PWM_PERIOD);
-
   delay(1000);
 }
 
