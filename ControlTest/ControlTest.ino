@@ -37,8 +37,8 @@ int outerPressure; // Pressure sensor in outer circuit
 // PID variables
 int totalError;
 int previousError;
-float kp;
-float ki;
+float kp = 1;
+float ki = 1;
 float kd;
 
 // PWM variables
@@ -216,7 +216,7 @@ void loop() {// 50 Hz
 //  }
   inhalation(); //DEBUG: testing PID during inhalation
 
-  delay(20);
+  delay(1000);
 }
 
 ///**
