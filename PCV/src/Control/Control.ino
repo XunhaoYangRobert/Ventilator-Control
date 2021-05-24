@@ -14,17 +14,18 @@ using namespace arduino_due::pwm_lib;
 #define EXHALATION 1
 
 #define PWM_PERIOD 100000 // 1kHz
-#define MAXIMUM_FLOW 256
+#define MAXIMUM_FLOW 10000
+
+// User settings
+float targetPressure;
+float PEEP;
+float Tinhale; // Duration of a single inhalation in millisecond
+float Texhale; // Duration of a single exhalation in millisecond
+float FiO2; // Must be greater than room air oxygen concentration 0.21
 
 // System variables
 unsigned long referenceTime; // Reference system start time
 unsigned long startOfBreath; // Keep track of the start time of each breath
-
-// User settings
-float PEEP;
-float targetPressure; // In rawadc
-float Tinhale; // Duration of a single inhalation
-float Texhale; // Duration of a single exhalation
 
 // Inner circuit variables
 boolean mode; // Used to identify which states the ventilator is in
@@ -35,52 +36,20 @@ int outO2; // O2 sensor in exhalation tube
 int pressure; // Pressure sensor in inner circuit
 
 // Outer circuit variables
-float FiO2 = 0.22; // Must be greater than room air oxygen concentration 0.21
 int outerPressure; // Pressure sensor in outer circuit
 
 // PID variables
 int totalError;
 int previousError;
-float kp;
+float kp = 50;
 float ki;
-float kd;
+float kd = 5;
 
 // PWM variables
 pwm<pwm_pin::PWML7_PC24> pwmInValve; // PIN 6, inhalation valve
 pwm<pwm_pin::PWML6_PC23> pwmOutValve; // PIN 7, exhalation valve
 pwm<pwm_pin::PWML5_PC22> pwmAirValve; // PIN 8, air valve
 pwm<pwm_pin::PWML4_PC21> pwmO2Valve; // PIN 9, O2 valve
-
-/**
- * Function to compute PSI for 150PAAB5.
- * 
- * @param rawadc raw analog signal
- * @return corresponding PSI
- */
-float adc2PSI150PA(int rawadc) {
-//  // Conversion equation from the data sheet
-//  float PSI = (rawadc * 3.3 / 1023.0 - 0.33) * 150 / 2.64;
-
-  // Result from linear regression
-  float PSI = 0.1737 * rawadc - 32.31021;
-  return PSI;
-
-  // TODO: recalibrate pressure sensor after connecting everything
-}
-
-/**
- * Inversion function of adc2PSI150PA.
- * 
- * @param PSI
- * @return corresponding adc   
- */
-int PSI2adc150PA(float PSI) {
-  // Result from linear regression
-  int adc = (int)((PSI + 32.31021) / 0.1737);
-  return adc;
-
-  // TODO: recalibrate pressure sensor after connnecting everything
-}
 
 /**
  * Given the target pressure value, this function compute the target flow to
@@ -107,7 +76,7 @@ int PIDController(int targetPressure) {
  * @param targetFlow current targeting flow
  */
 void Effector(int targetFlow) {
-  if (targetFlow = 0) {
+  if (targetFlow == 0) {
     pwmInValve.set_duty(0);
     pwmOutValve.set_duty(0);
   } else if (targetFlow > 0) {
@@ -154,13 +123,14 @@ void exhalation() {
     transition();
   }
 
-  // TODO: set this trigger value
-  int trigger = 0; // Determine whether to naturally breath out or to involve PID
+  int trigger = 50; // Determine whether to naturally breath out or to involve PID
   if (pressure - PEEP >= trigger) {
     breathOutEffector();
   } else {
-    int targetFlow = PIDController(targetPressure);
+    int targetFlow = PIDController(PEEP);
     Effector(targetFlow);
+
+    // TODO: add patient-triggered breath logic
   }
 }
 
@@ -203,6 +173,9 @@ void setup() {
   // Set referenceTime as when the program starts
   referenceTime = millis();
   startOfBreath = 0;
+
+  // Set the ADC resolution to 4096
+  analogReadResolution(12); 
 }
 
 /**
